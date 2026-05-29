@@ -1,0 +1,44 @@
+package br.com.empresa.lab.controller;
+
+import br.com.empresa.lab.dto.ClienteDTO;
+import br.com.empresa.lab.dto.EquipamentoDTO;
+import br.com.empresa.lab.service.ClienteService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(value = "/clientes")
+public class ClienteController {
+
+    private ClienteService clienteService;
+
+    public ClienteController(ClienteService clienteService){
+        this.clienteService = clienteService;
+    }
+
+    @GetMapping
+    public ResponseEntity <Page<ClienteDTO>> buscarTodosClientes(Pageable pageable){
+        Page<ClienteDTO> result = clienteService.pegarTodosClientes(pageable);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ClienteDTO> buscarClientePorId(@PathVariable Long id){
+       ClienteDTO dto = clienteService.pegarClientePorId(id);
+       return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping(value = "/{id}/equipamentos")
+    public ResponseEntity<List<EquipamentoDTO>> buscarEquipamentosPorCliente(@PathVariable Long id) {
+        List<EquipamentoDTO> result = clienteService.pegarEquipamentosPorCliente(id);
+        return ResponseEntity.ok(result);
+    }
+
+}

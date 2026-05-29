@@ -1,0 +1,24 @@
+GET /cliente - mostrar todos os clientes --> ok 
+GET /cliente/{id} - pegar cliente por id - ok
+GET /equipamento - mostrar todos os equipamentos --- ok
+GET /equipamentos/{id} - pegar equipamento por id --- ok
+
+GET /cliente/{id}/equipamentos         → listar equipamentos de um cliente específico OK
+GET /equipamento/tipo/{tipo}           → filtrar por tipo (NOTEBOOK, DESKTOP...) OK
+GET /equipamento/no-laboratorio        → listar equipamentos que estão no laboratório agora
+
+
+POST /cliente - inserir um novo cliente
+POST /cliente/equipamentoId - inserir um novo equipamento de um cliente
+
+PUT /cliente/{id}         → atualizar dados do cliente
+PUT /equipamento/{id}     → atualizar dados do equipamento
+
+DELETE /cliente/{id}      → remover cliente
+DELETE /equipamento/{id}  → remover equipamento
+
+PATCH /equipamento/{id}/entrada   → registrar entrada no laboratório
+PATCH /equipamento/{id}/saida     → registrar saída do laboratório
+
+
+UPDATE DO CODIGO (EXEMPLO PARA MAQUINAS NOVAS QUE CHEGARÃO COMO NULL E SERÃO ATRIBUIDOS ETIQUETAS)
