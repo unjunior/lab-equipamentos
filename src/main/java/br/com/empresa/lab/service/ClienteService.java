@@ -40,4 +40,13 @@ public class ClienteService {
         return cliente.getEquipamentos();
     }
 
+    @Transactional
+    public ClienteDTO insereCliente (ClienteDTO dto){
+        Cliente cliente = new Cliente();
+        cliente.setNome(dto.getNome());
+        cliente.setCodigo(dto.getCodigo());
+
+        cliente = clienteRepository.save(cliente);
+        return new ClienteDTO(cliente);
+    }
 }

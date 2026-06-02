@@ -2,6 +2,7 @@ package br.com.empresa.lab.entidades;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,8 +20,9 @@ public class Cliente {
     @Column(unique = true)
     private String nome;
 
-    @OneToMany (mappedBy = "cliente")
-    private List<Equipamento> equipamentos;
+    // Cliente.java
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+    private List<Equipamento> equipamentos = new ArrayList<>();
 
     public Cliente() {
     }

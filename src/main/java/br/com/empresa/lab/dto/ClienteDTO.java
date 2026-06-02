@@ -12,6 +12,8 @@ public class ClienteDTO {
     private String nome;
     private List<EquipamentoDTO> equipamentos = new ArrayList<>();
 
+    public ClienteDTO(){}
+
     public ClienteDTO(Long id, String codigo, String nome) {
         this.id = id;
         this.codigo = codigo;
@@ -26,7 +28,6 @@ public class ClienteDTO {
         this.equipamentos = cliente.getEquipamentos()
                 .stream().map(e -> new EquipamentoDTO(e.getCodigo(), e.getTipo(), e.getCliente().getId(), e.getStatusEquipamento()))
                 .toList();
-
     }
 
     public Long getId(){
