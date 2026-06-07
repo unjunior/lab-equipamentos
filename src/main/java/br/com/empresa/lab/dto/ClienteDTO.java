@@ -24,9 +24,9 @@ public class ClienteDTO {
         this.id = cliente.getId();
         this.codigo = cliente.getCodigo();
         this.nome = cliente.getNome();
-
         this.equipamentos = cliente.getEquipamentos()
-                .stream().map(e -> new EquipamentoDTO(e.getCodigo(), e.getTipo(), e.getCliente().getId(), e.getStatusEquipamento()))
+                .stream()
+                .map(EquipamentoDTO::new)
                 .toList();
     }
 

@@ -1,9 +1,11 @@
 package br.com.empresa.lab.service;
 
 import br.com.empresa.lab.dto.EquipamentoDTO;
+import br.com.empresa.lab.entidades.Cliente;
 import br.com.empresa.lab.entidades.Equipamento;
 import br.com.empresa.lab.enums.StatusEquipamento;
 import br.com.empresa.lab.enums.Tipo;
+import br.com.empresa.lab.repository.ClienteRepository;
 import br.com.empresa.lab.repository.EquipamentoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +18,13 @@ import java.util.List;
 public class EquipamentoService {
 
     private EquipamentoRepository equipamentoRepository;
+    private ClienteRepository clienteRepository;
 
-    public EquipamentoService(EquipamentoRepository equipamentoRepository){
+
+    public EquipamentoService(EquipamentoRepository equipamentoRepository,
+                              ClienteRepository clienteRepository){
         this.equipamentoRepository = equipamentoRepository;
+        this.clienteRepository = clienteRepository;
     }
 
     public Page<EquipamentoDTO> buscarTodosEquipamentos(Pageable pageable) {
@@ -53,6 +59,23 @@ public class EquipamentoService {
 //        return result.stream().map(EquipamentoDTO::new).toList();
 //    }
 
+    @Transactional
+    public EquipamentoDTO insert(Long clienteId, EquipamentoDTO dto){
+
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow( () -> new RuntimeException("Cliente não encontrado"));
+
+
+        Equipamento equipamento = new Equipamento();
+        equipamento.setCodigo(dto.getCodigo());
+        equipamento.setTipo(dto.getTipo());
+        equipamento.setDataEntrada(dto.getDataEntrada());
+        equipamento.setCliente(cliente);
+        equipamento.setStatusEquipamento(dto.getStatusEquipamento());
+
+        Equipamento novoEquipamento = equipamentoRepository.save(equipamento);
+        return new EquipamentoDTO(novoEquipamento);
+    }
 
 }
 

@@ -8,7 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -60,5 +62,16 @@ public class EquipamentoController {
 //        return ResponseEntity.ok(result);
 //    }
 
+    @PostMapping
+    public ResponseEntity<EquipamentoDTO> insertEquipamento(@RequestBody EquipamentoDTO dto) {
 
+        EquipamentoDTO novoEquipamento = equipamentoService.insert(dto.getClienteId(), dto);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .path("/{id}")
+                .buildAndExpand(novoEquipamento.getClienteId()).toUri();
+
+        return ResponseEntity.created(uri).body(novoEquipamento);
+    }
 }

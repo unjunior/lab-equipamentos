@@ -53,6 +53,10 @@ public class Equipamento {
         return codigo;
     }
 
+    public LocalDate getDataEntrada() {
+        return dataEntrada;
+    }
+
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
