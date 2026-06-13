@@ -4,6 +4,8 @@ import br.com.empresa.lab.dto.ClienteDTO;
 import br.com.empresa.lab.dto.EquipamentoDTO;
 import br.com.empresa.lab.entidades.Cliente;
 import br.com.empresa.lab.repository.ClienteRepository;
+import br.com.empresa.lab.service.excecoes.DatabaseException;
+import br.com.empresa.lab.service.excecoes.RecursoNaoEncontradoException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,7 @@ public class ClienteService {
     public ClienteDTO pegarClientePorId (Long id){
         Cliente result = clienteRepository.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("Id do cliente não foi encontrado")
+                        () -> new RecursoNaoEncontradoException("Id do cliente não foi encontrado")
                 );
         return new ClienteDTO(result);
     }
@@ -52,7 +54,8 @@ public class ClienteService {
 
     @Transactional
     public ClienteDTO atualizaCliente(Long id, ClienteDTO dto){
-        Cliente cliente = clienteRepository.getReferenceById(id);
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Id não existe para atualização"));
         cliente.setNome(dto.getNome());
         cliente.setCodigo(dto.getCodigo());
 
@@ -73,10 +76,10 @@ public class ClienteService {
     @Transactional
     public void deletaCliente(Long id){
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado!"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Cliente não encontrado!"));
 
         if (!cliente.getEquipamentos().isEmpty()) {
-            throw new RuntimeException("Cliente possui equipamentos no laboratório!");
+            throw new DatabaseException("Cliente possui equipamentos no laboratório!");
         }
 
         clienteRepository.deleteById(id);

@@ -7,6 +7,7 @@ import br.com.empresa.lab.enums.StatusEquipamento;
 import br.com.empresa.lab.enums.Tipo;
 import br.com.empresa.lab.repository.ClienteRepository;
 import br.com.empresa.lab.repository.EquipamentoRepository;
+import br.com.empresa.lab.service.excecoes.RecursoNaoEncontradoException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class EquipamentoService {
     public EquipamentoDTO pegarEquipamentoPorId(Long id){
         Equipamento result = equipamentoRepository.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("Id do equipamento não foi encontrado!")
+                        () -> new RecursoNaoEncontradoException("Id do equipamento não foi encontrado!")
                 );
 
         return new EquipamentoDTO(result);
@@ -63,7 +64,7 @@ public class EquipamentoService {
     public EquipamentoDTO insert(Long clienteId, EquipamentoDTO dto){
 
         Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow( () -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow( () -> new RecursoNaoEncontradoException("Cliente não encontrado"));
 
 
         Equipamento equipamento = new Equipamento();
@@ -79,7 +80,8 @@ public class EquipamentoService {
 
     @Transactional
     public EquipamentoDTO atualizaEquipamento(Long id, EquipamentoDTO dto){
-        Equipamento equipamento = equipamentoRepository.getReferenceById(id);
+        Equipamento equipamento = equipamentoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Id não existe para atualização"));
         equipamento.setCodigo(dto.getCodigo());
         equipamento.setTipo(dto.getTipo());
         equipamento.setDataEntrada(dto.getDataEntrada());
@@ -91,18 +93,22 @@ public class EquipamentoService {
 
     @Transactional
     public EquipamentoDTO atualizaStatusEquipamento(Long id, EquipamentoDTO dto){
-        Equipamento equipamento = equipamentoRepository.getReferenceById(id);
-        equipamento.setStatusEquipamento(dto.getStatusEquipamento());
 
-        Equipamento novo = equipamentoRepository.save(equipamento);
-        return new EquipamentoDTO(novo);
-    }
+            Equipamento equipamento = equipamentoRepository.findById(id)
+                    .orElseThrow(() -> new RecursoNaoEncontradoException("Id não existe para atualização"));
+            equipamento.setStatusEquipamento(dto.getStatusEquipamento());
+
+            Equipamento novo = equipamentoRepository.save(equipamento);
+            return new EquipamentoDTO(novo);
+        }
+
+
 
     @Transactional
     public void deletaEquipamento(Long id){
 
         if(!equipamentoRepository.existsById(id)){
-            throw new RuntimeException("Equipamento inexistente");
+            throw new RecursoNaoEncontradoException("Equipamento inexistente");
         }
 
         equipamentoRepository.deleteById(id);
