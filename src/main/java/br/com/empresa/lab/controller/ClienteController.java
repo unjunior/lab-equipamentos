@@ -52,4 +52,16 @@ public class ClienteController {
         return ResponseEntity.created(uri).body(novoCliente);
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ClienteDTO> atualizaCliente(@PathVariable Long id, @RequestBody ClienteDTO dto){
+        dto = clienteService.atualizaCliente(id, dto);
+        return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deletaCliente(@PathVariable Long id){
+        clienteService.deletaCliente(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -74,4 +74,24 @@ public class EquipamentoController {
 
         return ResponseEntity.created(uri).body(novoEquipamento);
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<EquipamentoDTO> atualizaEquipamento(@PathVariable Long id, @RequestBody EquipamentoDTO dto){
+        dto = equipamentoService.atualizaEquipamento(id ,dto);
+
+        return ResponseEntity.ok(dto);
+    }
+
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<EquipamentoDTO> atualizaStatusEquipamento(@PathVariable Long id, @RequestBody EquipamentoDTO dto) {
+        dto = equipamentoService.atualizaStatusEquipamento(id, dto);
+
+        return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deletaEquipamento(@PathVariable Long id){
+        equipamentoService.deletaEquipamento(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -49,4 +49,36 @@ public class ClienteService {
         cliente = clienteRepository.save(cliente);
         return new ClienteDTO(cliente);
     }
+
+    @Transactional
+    public ClienteDTO atualizaCliente(Long id, ClienteDTO dto){
+        Cliente cliente = clienteRepository.getReferenceById(id);
+        cliente.setNome(dto.getNome());
+        cliente.setCodigo(dto.getCodigo());
+
+        Cliente novo = clienteRepository.save(cliente);
+        return new ClienteDTO(novo);
+    }
+
+//    @Transactional
+//    public void deletaCliente(Long id){
+//
+//        if(!clienteRepository.existsById(id)){
+//            throw new RuntimeException("Cliente inexistente");
+//        }
+//
+//        clienteRepository.deleteById(id);
+//    }
+
+    @Transactional
+    public void deletaCliente(Long id){
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado!"));
+
+        if (!cliente.getEquipamentos().isEmpty()) {
+            throw new RuntimeException("Cliente possui equipamentos no laboratório!");
+        }
+
+        clienteRepository.deleteById(id);
+    }
 }

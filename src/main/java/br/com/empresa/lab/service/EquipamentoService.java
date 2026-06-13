@@ -77,5 +77,35 @@ public class EquipamentoService {
         return new EquipamentoDTO(novoEquipamento);
     }
 
+    @Transactional
+    public EquipamentoDTO atualizaEquipamento(Long id, EquipamentoDTO dto){
+        Equipamento equipamento = equipamentoRepository.getReferenceById(id);
+        equipamento.setCodigo(dto.getCodigo());
+        equipamento.setTipo(dto.getTipo());
+        equipamento.setDataEntrada(dto.getDataEntrada());
+        equipamento.setStatusEquipamento(dto.getStatusEquipamento());
+
+        Equipamento novo = equipamentoRepository.save(equipamento);
+        return new EquipamentoDTO(novo);
+    }
+
+    @Transactional
+    public EquipamentoDTO atualizaStatusEquipamento(Long id, EquipamentoDTO dto){
+        Equipamento equipamento = equipamentoRepository.getReferenceById(id);
+        equipamento.setStatusEquipamento(dto.getStatusEquipamento());
+
+        Equipamento novo = equipamentoRepository.save(equipamento);
+        return new EquipamentoDTO(novo);
+    }
+
+    @Transactional
+    public void deletaEquipamento(Long id){
+
+        if(!equipamentoRepository.existsById(id)){
+            throw new RuntimeException("Equipamento inexistente");
+        }
+
+        equipamentoRepository.deleteById(id);
+    }
 }
 
