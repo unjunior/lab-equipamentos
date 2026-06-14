@@ -1,6 +1,8 @@
 package br.com.empresa.lab.dto;
 
 import br.com.empresa.lab.entidades.Cliente;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +10,12 @@ import java.util.List;
 public class ClienteDTO {
 
     private Long id;
+
+    @NotBlank(message = "O nome é requerido")
     private String codigo;
+
+    @Size(min = 3, message = "O nome não pode ter menos que 3 caracteres")
+    @NotBlank(message = "O nome é requerido")
     private String nome;
     private List<EquipamentoDTO> equipamentos = new ArrayList<>();
 

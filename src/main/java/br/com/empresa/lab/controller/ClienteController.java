@@ -3,6 +3,7 @@ package br.com.empresa.lab.controller;
 import br.com.empresa.lab.dto.ClienteDTO;
 import br.com.empresa.lab.dto.EquipamentoDTO;
 import br.com.empresa.lab.service.ClienteService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<ClienteDTO> insertCliente(@RequestBody ClienteDTO dto){
+    public ResponseEntity<ClienteDTO> insertCliente(@Valid @RequestBody ClienteDTO dto){
         ClienteDTO novoCliente = clienteService.insereCliente(dto);
 
         URI uri = ServletUriComponentsBuilder
@@ -53,7 +54,7 @@ public class ClienteController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ClienteDTO> atualizaCliente(@PathVariable Long id, @RequestBody ClienteDTO dto){
+    public ResponseEntity<ClienteDTO> atualizaCliente(@PathVariable Long id, @Valid @RequestBody ClienteDTO dto){
         dto = clienteService.atualizaCliente(id, dto);
         return ResponseEntity.ok(dto);
     }

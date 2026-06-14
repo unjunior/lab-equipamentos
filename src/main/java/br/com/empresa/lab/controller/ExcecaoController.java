@@ -6,10 +6,12 @@ import br.com.empresa.lab.service.excecoes.RecursoNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ExcecaoController {
@@ -34,6 +36,24 @@ public class ExcecaoController {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         RespostaErrosExceptionDTO erro = new RespostaErrosExceptionDTO(Instant.now(), status.value(),
                 e.getMessage(), request.getRequestURI());
+
+        return ResponseEntity.status(status).body(erro);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<RespostaErrosExceptionDTO> validacao(
+            MethodArgumentNotValidException e,
+            HttpServletRequest request){
+
+        HttpStatus status = HttpStatus.UNPROCESSABLE_CONTENT;
+
+        String mensagem = e.getBindingResult().getFieldErrors()
+                .stream()
+                .map(f -> f.getField() + ": " + f.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+        RespostaErrosExceptionDTO erro = new RespostaErrosExceptionDTO(Instant.now(), status.value(),
+                mensagem, request.getRequestURI());
 
         return ResponseEntity.status(status).body(erro);
     }
